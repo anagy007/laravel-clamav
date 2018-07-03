@@ -1,5 +1,5 @@
 <?php
 
-return array(
-    'clamav' => 'Virus detected in file upload.',
-);
+return [
+    'clamav' => 'The :attribute contains virus.',
+];

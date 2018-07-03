@@ -1,5 +1,0 @@
-{
-    "providers": [
-        "Sunspikes\\ClamavValidator\\ClamavValidatorServiceProvider"
-    ]
-}

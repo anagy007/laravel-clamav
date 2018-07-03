@@ -1,21 +1,10 @@
-# ClamAV Validator For Laravel 5
+# ClamAV integration for Laravel 5.5+
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/80f28825-1385-4daa-aaad-0e4c6b6b3910/mini.png)](https://insight.sensiolabs.com/projects/80f28825-1385-4daa-aaad-0e4c6b6b3910)
-[![Code Coverage](https://scrutinizer-ci.com/g/sunspikes/clamav-validator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/sunspikes/clamav-validator/?branch=master)
-[![Code Quality](https://scrutinizer-ci.com/g/sunspikes/clamav-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sunspikes/clamav-validator)
-[![Build Status](https://travis-ci.org/sunspikes/clamav-validator.svg?branch=master)](https://travis-ci.org/sunspikes/clamav-validator) 
-[![Latest Stable Version](https://poser.pugx.org/sunspikes/clamav-validator/v/stable)](https://packagist.org/packages/sunspikes/clamav-validator)
-[![License](https://poser.pugx.org/sunspikes/clamav-validator/license)](https://packagist.org/packages/sunspikes/clamav-validator)
+[![Latest Stable Version](https://poser.pugx.org/sunspikes/clamav-validator/v/stable)](https://packagist.org/packages/crys/laravel-clamav)
+[![License](https://poser.pugx.org/sunspikes/clamav-validator/license)](https://packagist.org/packages/crys/laravel-clamav)
 
 Custom Laravel 5 anti-virus validator for file uploads.
 
-* [Requirements](#requirements)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Configuration](#configuration)
-* [Author](#author)
-
-<a name="requirements"></a> 
 ## Requirements
 
 You must have ClamAV anti-virus scanner running on the server to make this package work.
@@ -26,56 +15,45 @@ For example on an Ubuntu machine, you can do:
 
 ```sh
 # Install clamav virus scanner
-sudo apt-get update
-sudo apt-get install clamav-daemon
+sudo apt update && apt install -y clamav-daemon
 
 # Update virus definitions
 sudo freshclam
 
 # Start the scanner service
-sudo service clamav-daemon start
+sudo systemctl enable --now clamav-daemon clamav-freshclam
 ```
 
 This package is not tested on windows, but if you have ClamAV running (usually on port 3310) it should work.
 
-<a name="installation"></a>
 ## Installation
 
 Install the package through [Composer](http://getcomposer.org).
 
-Run `composer require sunspikes/clamav-validator`
+Run `composer require crys/laravel-clamav`
 
 Add the following to your `providers` array in `config/app.php`:
 
 ```php
-'providers' => array(
+'providers' => [
 	// ...
 
-	Sunspikes\ClamavValidator\ClamavValidatorServiceProvider::class,
-),
+	Crys\Clamav\ServiceProvider::class,
+],
 ```
 
-<a name="usage"></a>
 ## Usage
 
 Use it like any `Validator` rule:
 
 ```php
-$rules = array(
+$rules = [
 	'my_file_field' => 'clamav',
-);
+];
 ```
 
-<a name="configuration"></a>
 ## Configuration
 
-By default the package will try to connect the clamav daemon via the default socket file (/var/run/clamav/clamd.ctl) and if it fails it will try the tcp port (127.0.0.1:3310)
+By default the package will try to connect the clamav daemon via the default unix socket (`/var/run/clamav/clamd.ctl`)
 
-But you can set the `CLAMAV_UNIX_SOCKET` (socket file path) or `CLAMAV_LOCAL_TCP_SOCKET` (host:port) environment variables to override this.
-
-<a name="author"></a>
-## Author
-
-Krishnaprasad MG [@sunspikes]
-
-_Contact me at [sunspikes at gmail dot com]_
+But you can set the `CLAMAV_HOST` environment variable to override this.
